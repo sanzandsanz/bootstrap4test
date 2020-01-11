@@ -1,0 +1,24 @@
+{
+  "name": "bootstrap4test",
+  "version": "1.0.0",
+  "description": "Bootstrap4 test template",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sanjay",
+  "license": "ISC",
+  "dependencies": {
+    "bgtm": "^2.1.1",
+    "bgtm-engine-images": "^2.0.0",
+    "bgtm-engine-js": "^2.0.0",
+    "bgtm-engine-scss": "^2.0.0",
+    "bgtm-engine-svgsprite": "^2.0.0",
+    "bootstrap": "^4.3.1",
+    "gulp": "^4.0.2",
+    "svg4everybody": "^2.1.9"
+  },
+  "devDependencies": {
+    "bgtm-engine-copy": "^2.0.0"
+  }
+}

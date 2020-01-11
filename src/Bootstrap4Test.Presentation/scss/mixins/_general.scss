@@ -1,0 +1,178 @@
+/********************************
+Mixin to calculate REM value, based on supplied
+px value.
+
+Usage:
+
+.selector {
+	@include fontSize(35px);
+}
+
+-OR-
+
+.selector {
+	font-size: calculateRem(16px);
+}
+Source:
+http://www.stubbornella.org/content/2013/07/01/easy-peasy-rem-conversion-with-sass/
+********************************/
+$browser-context: 16px; // Default
+
+@function calculateRem($pixels, $context: $browser-context) {
+    @return #{($pixels/$context)}rem;
+}
+
+@function calculateEm($pixels, $context: $browser-context) {
+    @return #{($pixels/$context)}em;
+}
+
+
+/*
+Why two mixins, I hear you say?
+
+Well, dear developer. Take a seat by the hearth, warm your
+frozen, cynical heart, and allow me to explain.
+
+Ideally, we want all font sizes in REMs. However, the page utility component
+features tools that resize the text. Now, this functionality has to be scoped to
+SPECIFIC dom elements - IE, not the ENTIRE page - just certain sections.
+If text in those areas is in REMs, then we can't safely resize it without affecting
+a font size change on the HTML and / or BODY element, which in turn will affect EVERY
+element with a REM value. So, we need text nodes in those
+areas to have font-size defined in EMs. That way, we can safely use
+javascript to increase / decrease the font size on that parent element.
+
+Thusly, all child elements elements (in EMs) can resize accordingly.
+
+Now you may ask 'master, how will I know the difference? How will I know which
+mixin to use?' And you'd be right to ask such a question. For therein lies the
+true strength of RE/EMJedi.
+
+If the element in question needs to available in the RIGHT column of a 2column
+page and hence needs be resized by the page utilities, then use @fontSizeFluid.
+
+That will set text at an EM value. If not, best stick with the standard @fontSize
+which will set test at a REM value.
+
+Go forth, my young apprentice. Fear not the existence of two seemingly
+conflicting mixins. I assure you, they exist for a reason.
+
+May the source be with you.... always.
+*/
+
+@mixin fontSize($size) {
+    font-size: calculateRem($size);
+}
+
+@mixin fontSizeFluid($size) {
+    font-size: calculateEm($size);
+}
+
+@mixin lineHeight($size) {
+    line-height: calculateRem($size);
+}
+
+
+/********************************
+Micro Clearfix
+Source:
+https://gist.github.com/mike-henderson/4948107
+http://nicolasgallagher.com/micro-clearfix-hack/
+
+Usage:
+elem {
+	@include clearfix-micro();
+}
+********************************/
+
+@mixin clearfix-micro() {
+    & {
+        *zoom: 1;
+    }
+
+    &:before,
+    &:after {
+        content: "";
+        display: table;
+    }
+
+    &:after {
+        clear: both;
+    }
+}
+
+
+
+/**
+ * Positioning mixin
+ *
+ * Used to center elements either vertically, horizontal or both.
+ *
+ * Defaults to both
+ *
+ * @param $horizontal = boolean;
+ * @param $vertical = boolean;
+ * @param $position = ('relative'|'absolute');
+ *
+ * NOTE: Element will often need 'display: block'
+ * to position correctly. This is intentionally
+ * left out of this mixin.
+ */
+@mixin centre($horizontal: 'true', $vertical: 'true', $position: 'relative' ) {
+    position: #{$position};
+
+    @if ($horizontal == 'true' and $vertical == 'true') {
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+    @else if ($horizontal == 'true') {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    @else if ($vertical == 'true') {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+/********************************
+Aspect Ratio
+Source:
+https://css-tricks.com/snippets/sass/maintain-aspect-ratio-mixin/
+
+Usage:
+Note: class names are for illustration only; any selector will do.
+Aspect ratio is entirely flexible - eg, (1,4),  (6-8), whatever you like
+
+.sixteen-nine {
+    @include aspect-ratio(16, 9);
+}
+
+.four-three {
+    @include aspect-ratio(4, 3);
+}
+
+.one-one {
+    @include aspect-ratio(1, 1);
+}
+
+********************************/
+@mixin aspect-ratio($width, $height) {
+    position: relative;
+
+    &:before {
+        display: block;
+        content: "";
+        width: 100%;
+        padding-top: ($height / $width) * 100%;
+    }
+
+    > .content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
